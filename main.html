@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Info</title>
+</head>
+<body>
+  <h2>Student Information</h2>
+  <form id="studentForm">
+    <label>Name: <input type="text" id="name" required></label><br><br>
+    <label>Age: <input type="number" id="age" required></label><br><br>
+    <label>Class: <input type="text" id="class" required></label><br><br>
+    <button type="submit">Save</button>
+  </form>
+
+  <h3>Saved Students</h3>
+  <ul id="studentList"></ul>
+
+  <script>
+    const form = document.getElementById('studentForm');
+    const studentList = document.getElementById('studentList');
+
+    // Load existing data on page load
+    window.onload = () => {
+      const students = JSON.parse(localStorage.getItem('students')) || [];
+      students.forEach(addStudentToList);
+    };
+
+    form.onsubmit = function(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const age = document.getElementById('age').value;
+      const studentClass = document.getElementById('class').value;
+
+      const student = { name, age, class: studentClass };
+
+      // Save to localStorage
+      const students = JSON.parse(localStorage.getItem('students')) || [];
+      students.push(student);
+      localStorage.setItem('students', JSON.stringify(students));
+
+      addStudentToList(student);
+
+      form.reset(); // Clear form
+    };
+
+    function addStudentToList(student) {
+      const li = document.createElement('li');
+      li.textContent = `Name: ${student.name}, Age: ${student.age}, Class: ${student.class}`;
+      studentList.appendChild(li);
+    }
+  </script>
+</body>
+</html>
